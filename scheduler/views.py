@@ -4,6 +4,7 @@ import json
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_protect
 
 from .forms import UserFillForm
 from .models import ScheduleModel, ScheduleTimes
@@ -18,7 +19,7 @@ from .models import ScheduleModel, ScheduleTimes
 #     if dtype == 'time':
 #         return datetime.time(*map(int, re.split('[^\d]', dstr)))
 
-
+@csrf_protect
 @never_cache
 def register_user(request):
     response_data = {'error' : '', 'msg': '', 'ferr': ''}
