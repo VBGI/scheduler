@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from django.conf.urls import *
+from .views import register_user
 
 urlpatterns = patterns('',
-   url(r'^scheduler/$', 'scheduler.views.register_user')
+   url(r'^scheduler/$', register_user)
 )
