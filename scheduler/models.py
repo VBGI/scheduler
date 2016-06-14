@@ -5,7 +5,7 @@ import datetime
 from django.db import models
 from django.utils import timezone
 from django.utils.translation import gettext as _
-
+from cms.models.pluginmodel import CMSPlugin
 
 class ScheduleName(models.Model):
     name = models.CharField(max_length=20, blank=False,
@@ -41,7 +41,7 @@ class ScheduleModel(models.Model):
     username = models.CharField(max_length=100, default='', blank=True, verbose_name=_("Имя"))    
     phone = models.CharField(max_length=20, default='', blank=True, verbose_name=_("Телефон"))
     email = models.EmailField(blank=True)
-    num = models.IntegerField(default=1, choices=THENUM, verbose_name=_("Число участников"))
+    num = models.IntegerField(default=1, choices=THENUM, verbose_name=_("Число участников"), blank=True)
     time = models.ForeignKey('ScheduleTimes', null=True, related_name='registered', verbose_name=_("Время"))
 
     def __unicode__(self):
@@ -71,3 +71,8 @@ class ScheduleTimes(models.Model):
     @property
     def get_free_places(self):
         return self.date.name.maxnumber - self.get_registered 
+
+
+
+class SchedulePlugin(CMSPlugin):
+    schedule = models.ForeignKey(ScheduleName, verbose_name=u"Название расписания")

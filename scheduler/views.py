@@ -1,6 +1,6 @@
-# import datetime
+# -*- coding: utf-8 -*-
+
 import json
-# import re
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
@@ -9,7 +9,7 @@ from django.views.decorators.csrf import csrf_protect
 from .forms import UserFillForm
 from .models import ScheduleModel, ScheduleTimes
 
-
+import re
 # def _from_iso(dstr, dtype='datetime'):
 #     if dstr is None: return None
 #     if dtype == 'datetime':
@@ -19,36 +19,47 @@ from .models import ScheduleModel, ScheduleTimes
 #     if dtype == 'time':
 #         return datetime.time(*map(int, re.split('[^\d]', dstr)))
 
-@csrf_protect
+def validate(uname, phone):
+    err_msg = ''
+    if not re.match(r'^[\-\+\d]+$', phone):
+        err_msg = 'Неправильный формат тел. номера'
+    if not uname: 
+        err_msg = 'Имя не задано'
+    return err_msg
+
 @never_cache
+@csrf_protect
 def register_user(request):
     response_data = {'error' : '', 'msg': '', 'ferr': ''}
     if request.method == 'POST':
-        # create a form instance and populate it with data from the request:
-        form = UserFillForm(request.POST)
-        # check whether it's valid:
-        if form.is_valid():
-            timepk = request.POST.get('timepk', None)
+        timepk = request.POST.get('timepk', None)
+        uname = request.POST.get('username', '')
+        uphone = request.POST.get('phone', '') 
+        umail = request.POST.get('email', '') 
+        unum = request.POST.get('num', '')        
+        err_msg = validate(uname, uphone)
+        if not err_msg:
             try:
                 timeobj = ScheduleTimes.objects.get(id=timepk)
-            except SceduleTimes.DoesNotExist:
+            except ScheduleTimes.DoesNotExist:
                 response_data.update({'error': 'Неправильно выбрано время'})
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
-            uname = form.cleaned_data['username']
-            uphone = form.cleaned_data['phone']
-            umail = form.cleaned_data['email']
-            unum = form.cleaned_data['num']
+            if timeobj.get_free_places <= 0:
+                response_data.update({'error': 'Выбранное время занято'})
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
+                unum = int(unum)
                 umod = ScheduleModel.objects.create(username=uname,
                                                     phone=uphone,
                                                     email=umail,
                                                     num=unum,
                                                     time=timeobj)
-                response_data.update({'msg', 'Вы успешно зарегистрировались на мероприятие'})
+                response_data.update({'msg': 'Вы успешно зарегистрировались'})
             except:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
         else:
-            response_data.update({'error': 'Неправильно заполнены поля формы', 'ferr': form.errors})
+            response_data.update({'error':err_msg})
     else:
         response_data['error'] = 'Неправильный запрос'
+
     return HttpResponse(json.dumps(response_data), content_type="application/json")

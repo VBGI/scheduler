@@ -1,0 +1,79 @@
+.scheduler-dates {
+	list-style-type: none;
+	float: left;
+	display: block;
+}
+
+.scheduler-dates > li {
+	
+	float: left;
+	display: block;
+}
+
+
+
+.scheduler-times{
+	list-style-type: none;
+	min-width: 200px;
+	max-width: 230px;
+	padding: 10px;
+ }
+ 
+ 
+ .scheduler-times > li {
+	padding-top: 10px;
+ }
+ 
+.scheduler-error{
+	display: none;
+}
+
+.scheduler-msg{
+	display: none;
+
+}
+
+.scheduler-user-form{
+	display: none;
+
+}
+
+.scheduler-user-form select {
+min-width: 40px;
+min-height: 30px;
+padding: 5px;
+}
+
+.scheduler-register {
+cursor: pointer;
+
+}
+
+.scheduler-register:hover {
+background-color: #AAEECC;
+}
+
+.scheduler-user-form * {
+	
+display: block;
+}
+
+.sсheduler-renew{
+min-height: 30px;
+min-width: 100px;
+background-color: cyan;
+}
+
+
+
+input[type=button]{
+cursor:pointer;
+min-height: 30px;
+min-width: 70px;
+}
+
+.scheduler-occupied{
+color: red;
+font-weight: bold;
+display: inline-block;
+}
