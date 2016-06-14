@@ -18,17 +18,14 @@ class ScheduleDatesAdmin(admin.ModelAdmin):
 
 class ScheduleModelAdmin(admin.ModelAdmin):
     list_display = ('get_date', 'get_time','username', 'phone', 'num', 'email')
-    def queryset(self, request):
-        qs = super(ScheduleModelAdmin, self).queryset(request)
-        return qs.filter(time__time__gt=timezone.now()).order_by('time__date__date', 'time__time')
-    
+    list_filter = ('time__date__date',)
     def get_time(self, obj):
-        return obj.time.time
+        return obj.time.time.strftime('%H:%M')
     get_time.admin_order_field  = 'time'
     get_time.short_description=_("Время")
 
     def get_date(self, obj):
-        return obj.time.date.date
+        return obj.time.date.date.strftime('%a, %d %b %Y')
     get_date.admin_order_field  = 'time'
     get_date.short_description=_("Дата")
 

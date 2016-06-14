@@ -8,7 +8,7 @@
    		<ul class='scheduler-times'>
    		{% for time in date.times.all %}
    			<li>Время: {{time.time|time:"H:i"}} {%if time.get_free_places > 0%} 
-   			<div class="scheduler-register"> Свободно {{time.get_free_places}} мест</div>
+   			<div class="scheduler-register"> Свободно {{time.get_free_places}} мест(а)</div>
    			 <div class="scheduler-user-form" data-time="{{time.pk}}">
     				{% csrf_token %}
     				{{ userform.as_table }}
@@ -24,97 +24,6 @@
    {%endif%}
   {%endfor%}
 </ul>
-
-<script type="text/javascript">
-
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-
-
-$(document).ready(function(){
-var csrftoken = getCookie('csrftoken');
-
-$('div.scheduler-register').click(function(){
-			
-			var was_closed = true;
-			
-			if ($(this).siblings('.scheduler-user-form').is(':visible')) {
-			was_closed = false;
-			}
-			$('.scheduler-user-form').slideUp();
-			$('.scheduler-error').html('');
-			$('.scheduler-msg').html('');
-			$('.scheduler-user-form').parent('li').css({'border': ''});
-			$("input[type='button']").each(function(){$(this).prop('disabled', false);});
-			$('input.sсheduler-renew').hide();
-			
-			if (was_closed) {
-				$(this).siblings('.scheduler-user-form').slideDown();
-				}
-			});
-	
-			
-
-});
-
-$("input[type='text']").keypress( function() {
-  $('.scheduler-user-form').parent('li').css({'border': ''});
-  $('.scheduler-error').html('');
-  $('.scheduler-msg').html('');
-});
-
-$("div.scheduler-user-form input[type='button']").click(function( event ) {
-				var csrftoken = getCookie('csrftoken');
-				var tosent ={};
-				var currentel = $(this).parent();
-				tosent['csrfmiddlewaretoken'] = csrftoken;
-				tosent['timepk'] = $(currentel).data('time');
-				tosent['username'] = $(currentel).children('input[name="username"]').val();
-				tosent['phone'] = $(currentel).children('input[name="phone"]').val();
-				tosent['email'] = $(currentel).children('input[name="email"]').val();
-				tosent['num'] = $(currentel).children('select[name=num]').val();
- 				$(currentel).parent('li').css({'border': ''});
-				$('.scheduler-error').hide();				
-				$.ajax({
-					url: "{% url 'scheduler.views.register_user' %}",
-					cache: false,
-					type: "POST",
-					dataType: "json",
-					data: tosent,
-					}).done(function(rdata) {
-					if (rdata['msg'].length>0){
-						 $(currentel).siblings('.scheduler-msg').html('<h3>' + rdata['msg'] + '</h3>');
-						 $(currentel).siblings('.scheduler-msg').show();
-						 $(currentel).children("input[type='button']").prop('disabled', true);
-						 $(currentel).siblings('input.sсheduler-renew').show();
-						 $(currentel).siblings('input[type="text"]').val('');
-							}
-					else {
-						if (rdata['error'].length>0){
-						$(currentel).parent('li').css({'border': '5px solid red'});
- 						$(currentel).siblings('div.scheduler-error').html('<h3 style="color: red">' + rdata['error'] + '</h3>');
- 						$(currentel).siblings('div.scheduler-error').show();
- 						 	}
-						}
-					});
-
-});
-</script>
-
 {%else%}
 <h2>Произошла ошибка при созданни формы расписания</h2>
 {%endif%}

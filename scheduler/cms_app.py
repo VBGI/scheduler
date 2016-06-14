@@ -5,6 +5,6 @@ from django.utils.translation import ugettext_lazy as _
 
 class SchedulerApphook(CMSApp):
     name = _(u"Ajax-служба приложения регистрации")
-    urls = ["scheduler.urls"]
+    urls = ["bgi.scheduler.urls"]
 
 apphook_pool.register(SchedulerApphook)
