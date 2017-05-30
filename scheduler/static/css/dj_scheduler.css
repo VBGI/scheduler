@@ -2,21 +2,32 @@
 	list-style-type: none;
 	float: left;
 	display: block;
+	
+}
+
+.scheduler-date{
+font-weight: bold;
+font-size: 20pt;
+cursor: pointer;
+}
+
+.scheduler-date:hover{
+background-color: #AAEECC;
 }
 
 .scheduler-dates > li {
-	
 	float: left;
 	display: block;
+	min-width: 50%;
+        margin: 5px;
 }
-
 
 
 .scheduler-times{
 	list-style-type: none;
-	min-width: 200px;
-	max-width: 230px;
+	
 	padding: 10px;
+	display: none;
  }
  
  
@@ -46,6 +57,7 @@ padding: 5px;
 
 .scheduler-register {
 cursor: pointer;
+font-size: 16pt;
 
 }
 

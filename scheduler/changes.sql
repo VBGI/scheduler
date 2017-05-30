@@ -1,0 +1,15 @@
+BEGIN;
+ALTER TABLE `scheduler_schedulename` MODIFY COLUMN `name` varchar(300) NOT NULL;
+ALTER TABLE `scheduler_schedulename` ADD COLUMN `user_id` integer;
+ALTER TABLE `scheduler_scheduledates` ADD COLUMN `user_id` integer;
+ALTER TABLE `scheduler_schedulemodel`  ADD COLUMN `user_id` integer;
+ALTER TABLE `scheduler_scheduletimes` ADD COLUMN `user_id` integer;
+ALTER TABLE `scheduler_schedulename` ADD CONSTRAINT `user_id_refs_id_d8a5d9c3` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+ALTER TABLE `scheduler_scheduledates` ADD CONSTRAINT `user_id_refs_id_e1837ae9` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+ALTER TABLE `scheduler_schedulemodel` ADD CONSTRAINT `user_id_refs_id_00def638` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+ALTER TABLE `scheduler_scheduletimes` ADD CONSTRAINT `user_id_refs_id_17e003ea` FOREIGN KEY (`user_id`) REFERENCES `auth_user` (`id`);
+CREATE INDEX `scheduler_schedulename_6340c63c` ON `scheduler_schedulename` (`user_id`);
+CREATE INDEX `scheduler_scheduledates_6340c63c` ON `scheduler_scheduledates` (`user_id`);
+CREATE INDEX `scheduler_schedulemodel_6340c63c` ON `scheduler_schedulemodel` (`user_id`);
+CREATE INDEX `scheduler_scheduletimes_6340c63c` ON `scheduler_scheduletimes` (`user_id`);
+COMMIT;

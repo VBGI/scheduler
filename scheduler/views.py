@@ -4,7 +4,7 @@ import json
 
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect, csfr_exempt
+from django.views.decorators.csrf import csrf_protect, csrf_exempt
 from django.contrib.auth import get_user_model
 from .models import ScheduleModel, ScheduleTimes
 
@@ -38,8 +38,13 @@ def register_user(request):
         unum = request.POST.get('num', '')
         upk = request.POST.get('upk', '')
         try:
+            upk = int(upk)
+        except ValueError:
+            return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
+
+        try:
             user = get_user_model().objects.get(pk=upk)
-        except User.DoesNotExist:
+        except get_user_model().DoesNotExist:
             return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
 
         err_msg = validate(uname, uphone)
@@ -54,6 +59,7 @@ def register_user(request):
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
                 unum = int(unum)
+                print uname, uphone, umail, unum, timeobj, user
                 umod = ScheduleModel.objects.create(username=uname,
                                                     phone=uphone,
                                                     email=umail,
@@ -61,7 +67,7 @@ def register_user(request):
                                                     time=timeobj,
                                                     user=user)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
-            except:
+            except ValueError:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
         else:
             response_data.update({'error':err_msg})

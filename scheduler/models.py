@@ -27,7 +27,7 @@ class ScheduleName(models.Model):
     class Meta:
         verbose_name = _('Наименование расписания')
         verbose_name_plural = _('Наименования расписаний')
-
+        permissions = (('can_edit_all', 'Can edit all objects'),)
 
 class ScheduleDates(models.Model):
     name = models.ForeignKey(ScheduleName, verbose_name="Расписание", related_name='dates')
@@ -41,6 +41,7 @@ class ScheduleDates(models.Model):
         verbose_name = _('Дата события')
         verbose_name_plural = _('Даты событий')
         ordering = ('date',)
+        
 
 
 class ScheduleModel(models.Model):
@@ -58,6 +59,7 @@ class ScheduleModel(models.Model):
     class Meta:
         verbose_name = _('Запись регистрации')
         verbose_name_plural = _('Записи регистрации')
+        
 
 
 class ScheduleTimes(models.Model):
@@ -72,6 +74,7 @@ class ScheduleTimes(models.Model):
         verbose_name = _('Время регистрации')
         verbose_name_plural = _('Времена регистрации')
         ordering = ('time',)
+        
 
     @property
     def get_registered(self):
