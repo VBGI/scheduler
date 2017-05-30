@@ -8,27 +8,7 @@
 
 {%addtoblock "js"%} 
 <script type="text/javascript">
-function getCookie(name) {
-    var cookieValue = null;
-    if (document.cookie && document.cookie != '') {
-        var cookies = document.cookie.split(';');
-        for (var i = 0; i < cookies.length; i++) {
-            var cookie = jQuery.trim(cookies[i]);
-            // Does this cookie string begin with the name we want?
-            if (cookie.substring(0, name.length + 1) == (name + '=')) {
-                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                break;
-            }
-        }
-    }
-    return cookieValue;
-}
-
-
-
 $(document).ready(function(){
-var csrftoken = getCookie('csrftoken');
-
 $('div.scheduler-register').click(function(){
 			
 			var was_closed = true;
@@ -59,10 +39,9 @@ $("input[type='text']").keypress( function() {
 });
 
 $("div.scheduler-user-form input[type='button']").click(function( event ) {
-				var csrftoken = getCookie('csrftoken');
 				var tosent ={};
 				var currentel = $(this).parent();
-				tosent['csrfmiddlewaretoken'] = csrftoken;
+        tosent['upk'] = $(currentel).data('upk');
 				tosent['timepk'] = $(currentel).data('time');
 				tosent['username'] = $(currentel).children('input[name="username"]').val();
 				tosent['phone'] = $(currentel).children('input[name="phone"]').val();

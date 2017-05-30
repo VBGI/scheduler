@@ -9,7 +9,7 @@
    		{% for time in date.times.all %}
    			<li>Время: {{time.time|time:"H:i"}} {%if time.get_free_places > 0%} 
    			<div class="scheduler-register"> Свободно {{time.get_free_places}} мест(а)</div>
-   			 <div class="scheduler-user-form" data-time="{{time.pk}}">
+        <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}" >
     				{% csrf_token %}
     				{{ userform.as_table }}
     				 <input type="button" value="Зарегистрироваться" >
