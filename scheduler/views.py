@@ -93,7 +93,7 @@ def register_user(request):
             return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
 
         try:
-            user = get_user_model().objects.get(pk=upk)ScheduleDates
+            user = get_user_model().objects.get(pk=upk)
         except get_user_model().DoesNotExist:
             return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
 
