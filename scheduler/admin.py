@@ -46,6 +46,13 @@ class ScheduleTimesInline(PermissionMixin, admin.TabularInline):
 class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
     inlines = [ScheduleTimesInline]
 
+    def get_list_filter(self, request):
+        list_filter = super(ScheduleDatesAdmin, self).get_list_filter(request)
+        if request.user.is_superuser:
+            list_filter += ('user')
+        return list_filter
+
+
 class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
     list_display = ('get_date', 'get_time','username', 'phone', 'num', 'email')
     list_filter = ('time__date__date',)
@@ -58,6 +65,13 @@ class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
         return obj.time.date.date.strftime('%a, %d %b %Y')
     get_date.admin_order_field  = 'time'
     get_date.short_description=_("Дата")
+
+    def get_list_filter(self, request):
+        list_filter = super(ScheduleModelAdmin, self).get_list_filter(request)
+        if request.user.is_superuser:
+            list_filter += ('user')
+        return list_filter
+
 
 
 class ScheduleNameAdmin(PermissionMixin, admin.ModelAdmin):
@@ -75,6 +89,12 @@ class ScheduleNameAdmin(PermissionMixin, admin.ModelAdmin):
                     thenum += 1
         self.message_user(request, u"Было создано %s записи" % thenum)
     create_schedule.short_description = u'Генерировать расписание'
+
+    def get_list_filter(self, request):
+        list_filter = super(ScheduleNameAdmin, self).get_list_filter(request)
+        if request.user.is_superuser:
+            list_filter += ('user')
+        return list_filter
 
 
 admin.site.register(ScheduleModel, ScheduleModelAdmin)
