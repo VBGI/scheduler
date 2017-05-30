@@ -51,7 +51,7 @@ class SchedulerCustomListFilter(SimpleListFilter):
         cperm = request.user.has_perm('scheduler.can_edit_all')
         res = []
         umodel = get_user_model()
-        for item in list(set(map(lambda x: x.user.username, ScheduleName.objects.all()))):
+        for item in list(set(map(lambda x: x.user.username, ScheduleName.objects.all().exclude(user__isnull=True)))):
             try:
                 uinstance = umodel.objects.get(username__iexact=item)
                 res.append((uinstance.id, uinstance.username))
