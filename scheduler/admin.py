@@ -105,7 +105,7 @@ class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
 
     def get_date(self, obj):
         return obj.time.date.date.strftime('%a, %d %b %Y')
-    get_date.admin_order_field  = 'time'
+    get_date.admin_order_field  = 'time__date__date'
     get_date.short_description=_("Дата")
 
     def get_list_filter(self, request):

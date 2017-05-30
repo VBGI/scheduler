@@ -1,22 +1,53 @@
 # -*- coding: utf-8 -*-
 
 import json
-
+import re
 from django.http import HttpResponse
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_protect, csrf_exempt
+from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import get_user_model
 from .models import ScheduleModel, ScheduleTimes
+from django.core.mail import send_mail
+from django.core.urlresolvers import reverse
 
-import re
-# def _from_iso(dstr, dtype='datetime'):
-#     if dstr is None: return None
-#     if dtype == 'datetime':
-#         return datetime.datetime(*map(int, re.split('[^\d]', dstr)))
-#     if dtype == 'date':
-#         return datetime.date(*map(int, re.split('[^\d]', dstr)))
-#     if dtype == 'time':
-#         return datetime.time(*map(int, re.split('[^\d]', dstr)))
+
+rec_created = u'''
+Здравствуйте, %s!
+
+Вы успешно зарегистрировались на маршрут "%s".
+
+Дата и время посещения маршрута: %s; %s 
+
+
+Одевайтесь по погоде! В случае дождя рекомендуем перенести посещение
+маршрута на другой день.
+
+
+ВНИМАНИЕ!
+Отменить регистрацию Вы сможете, перейдя по ссылке:
+
+%s
+
+или по телефону: +xxxxxxxxx
+
+С уважением, 
+xxxxxxx
+'''
+
+
+rec_removed = u'''
+Здравствуйте, %s!
+
+Вы успешно отменили регистрацию (дата: %s, время: %s) на маршрут "%s".
+
+С уважением,
+xxxxxx
+тел.: xxxxxx
+'''
+
+
+
+
 
 def validate(uname, phone):
     err_msg = ''
@@ -30,6 +61,25 @@ def validate(uname, phone):
 @csrf_exempt
 def register_user(request):
     response_data = {'error' : '', 'msg': '', 'ferr': ''}
+    
+    if request.method == 'GET':
+        hashid = request.GET.get('hashid', '')
+        if hashid and ScheduleModel.objects.filter(hashid=hashid).exists():
+            try:
+                obj = ScheduleModel.objects.filter(hashid=hashid)[0]
+                ctime = str(obj.time.time)
+                cdate = str(obj.time.date.date)
+                cname= obj.username
+                cmail = obj.email
+                path = str(obj.time.date.name.name)
+                obj.delete()
+                send_mail(u'Отмена регистрации на маршрут "Наука в путешествии. ПриМорье."',
+                      rec_removed % (cname, cdate, ctime, path),
+                      'ecocenter@botsad.ru', [cmail,], fail_silently=True)
+            except:
+                HttpResponse('<h2>Запись с Вашим ID не найдена.</h2>')
+            return HttpResponse('<h2>Поздравляем! Вы успешно отменили регистрацию!</h2>')
+    
     if request.method == 'POST':
         timepk = request.POST.get('timepk', None)
         uname = request.POST.get('username', '')
@@ -43,7 +93,7 @@ def register_user(request):
             return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
 
         try:
-            user = get_user_model().objects.get(pk=upk)
+            user = get_user_model().objects.get(pk=upk)ScheduleDates
         except get_user_model().DoesNotExist:
             return HttpResponse(json.dumps({'error': 'Внутренняя ошибка при определении принадлежности к расписанию'}))
 
@@ -59,15 +109,18 @@ def register_user(request):
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
                 unum = int(unum)
-                print uname, uphone, umail, unum, timeobj, user
                 umod = ScheduleModel.objects.create(username=uname,
                                                     phone=uphone,
                                                     email=umail,
                                                     num=unum,
                                                     time=timeobj,
                                                     user=user)
+                hashurl = 'http://botsad.ru' + reverse('bgi-scheduler') + '?hashid=' + umod.hashid
+                send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье." (Ботанический сад, Владивосток)',
+                            rec_created%(uname, str(umod.time.date.name.name), str(umod.time.date.date), str(umod.time.time), hashurl),
+                            'ecocenter@botsad.ru', [umod.email, 'ecocenter@botsad.ru'], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
-            except ValueError:
+            except:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
         else:
             response_data.update({'error':err_msg})

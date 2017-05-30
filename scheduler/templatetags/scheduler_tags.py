@@ -13,11 +13,12 @@ def show_form(pk):
     error = ''
     try:
         dates = ScheduleDates.objects.filter(name=pk)
+        thenum = dates[0].name.maxnumber
     except ScheduleDates.DoesNotExist:
         error = u'Не определено ни одного расписания'
     return {'error': error,
             'dates': dates,
-            'userform': UserFillForm(),
+            'userform': UserFillForm(thenum),
             'schedule_pk': pk
             }
 

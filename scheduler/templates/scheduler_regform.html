@@ -4,19 +4,19 @@
   {% for date in dates %}
   {%if date.times.all %} 
    <li>
-   <div class="scheduler-date">{{date.date}}</div>
+   <div class="scheduler-date">{{date.date|date:"d F, l"}}</div>
    		<ul class='scheduler-times'>
    		{% for time in date.times.all %}
-   			<li>Время: {{time.time|time:"H:i"}} {%if time.get_free_places > 0%} 
-   			<div class="scheduler-register"> Свободно {{time.get_free_places}} мест(а)</div>
-        <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}" >
+   			<li>{%if time.get_registered <= 0%} 
+   			<div class="scheduler-register"> Время: {{time.time|time:"H:i"}} </div>
+   			 <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}">
+    				{% csrf_token %}
     				{{ userform.as_table }}
     				 <input type="button" value="Зарегистрироваться" >
    			 </div>
 				<div class="scheduler-error"></div>   			 
 				<div class="scheduler-msg"></div>
-				<input type="button" onclick="location.reload()" value="Обновить страницу" class="sсheduler-renew" style="display:none">
-   			 {%else%} <div class="scheduler-occupied">Занято</div> {%endif%} </li>
+   			 {%else%}Время: {{time.time|time:"H:i"}}:<div class="scheduler-occupied">Занято</div> {%endif%} </li>
    		{%endfor%}
    		</ul>
    </li>

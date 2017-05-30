@@ -8,7 +8,7 @@ from django.utils.translation import gettext as _
 from cms.models.pluginmodel import CMSPlugin
 from django.contrib.auth import get_user_model
 
-
+import uuid
 
 
 class ScheduleName(models.Model):
@@ -46,12 +46,13 @@ class ScheduleDates(models.Model):
 
 class ScheduleModel(models.Model):
     THENUM = ((1, 'Один'), (2, 'Два'), (3, 'Три'), (4, 'Четыре'), (5, 'Пять'))
-    username = models.CharField(max_length=100, default='', blank=True, verbose_name=_("Имя"))
+    username = models.CharField(max_length=100, default='', blank=True, verbose_name=_("ФИО"))
     phone = models.CharField(max_length=20, default='', blank=True, verbose_name=_("Телефон"))
     email = models.EmailField(blank=True)
     num = models.IntegerField(default=1, choices=THENUM, verbose_name=_("Число участников"), blank=True)
     time = models.ForeignKey('ScheduleTimes', null=True, related_name='registered', verbose_name=_("Время"))
     user = models.ForeignKey(get_user_model(), blank=True, null=True, related_name='+')
+    hashid = models.CharField(max_length=32, default=uuid.uuid4().hex, editable=False, blank=True)
 
     def __unicode__(self):
         return self.username + '|' + self.phone + '|' + str(self.time.date.date) + '|' + str(self.time.time)
