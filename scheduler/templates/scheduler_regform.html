@@ -8,7 +8,7 @@
    		<ul class='scheduler-times'>
    		{%if not date.dateonly %}
    		{% for time in date.times.all %}
-   			<li>{%if time.get_free_places > 0%} 
+   			<li>{%if time.get_registered == 0%} 
    			<div class="scheduler-register"> Время: {{time.time|time:"H:i"}}</div>
    			 <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}">
     				{{ userform.as_table }}

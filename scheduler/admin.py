@@ -80,7 +80,7 @@ class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
     def get_list_filter(self, request):
         list_filter = super(ScheduleDatesAdmin, self).get_list_filter(request)
         if request.user.has_perm('scheduler.can_edit_all'):
-            list_filter += (SchedulerCustomListFilter, )
+            list_filter += (SchedulerCustomListFilter, 'name')
         return list_filter
 
     def get_readonly_fields(self, request, obj=None):
@@ -113,7 +113,7 @@ class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
     def get_list_filter(self, request):
         list_filter = super(ScheduleModelAdmin, self).get_list_filter(request)
         if request.user.has_perm('scheduler.can_edit_all'):
-            list_filter += (SchedulerCustomListFilter,)
+            list_filter += (SchedulerCustomListFilter, 'time__date__name')
         return list_filter
 
     def get_readonly_fields(self, request, obj=None):
