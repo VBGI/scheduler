@@ -89,7 +89,8 @@ class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
     
     def get_form(self, request, obj=None, **kwargs):
         form = super(ScheduleDatesAdmin, self).get_form(request, obj, **kwargs)
-        form.base_fields['name'].queryset = form.base_fields['name'].queryset.filter(user=request.user)
+        if not request.user.has_perm('scheduler.can_edit_all'):
+            form.base_fields['name'].queryset = form.base_fields['name'].queryset.filter(user=request.user)
         return form    
     
 

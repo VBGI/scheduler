@@ -33,6 +33,7 @@ class ScheduleDates(models.Model):
     name = models.ForeignKey(ScheduleName, verbose_name="Расписание", related_name='dates')
     date = models.DateField(default=timezone.now())
     user = models.ForeignKey(get_user_model(), blank=True, null=True, related_name='+')
+    dateonly = models.BooleanField(default=False, blank=True)
 
     def __unicode__(self):
         return self.name.name + '|' + str(self.date)

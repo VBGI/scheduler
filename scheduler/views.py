@@ -18,11 +18,6 @@ rec_created = u'''
 
 Дата и время посещения маршрута: %s; %s 
 
-
-Одевайтесь по погоде! В случае дождя рекомендуем перенести посещение
-маршрута на другой день.
-
-
 ВНИМАНИЕ!
 Отменить регистрацию Вы сможете, перейдя по ссылке:
 
@@ -30,8 +25,8 @@ rec_created = u'''
 
 или по телефону: +xxxxxxxxx
 
-С уважением, 
-xxxxxxx
+Благодарим за участие, 
+оргкомитет проекта "Наука в путешествии. ПриМорье."
 '''
 
 
@@ -40,13 +35,9 @@ rec_removed = u'''
 
 Вы успешно отменили регистрацию (дата: %s, время: %s) на маршрут "%s".
 
-С уважением,
-xxxxxx
-тел.: xxxxxx
+Благодарим за участие, 
+оргкомитет проекта "Наука в путешествии. ПриМорье."
 '''
-
-
-
 
 
 def validate(uname, phone):
@@ -71,7 +62,7 @@ def register_user(request):
                 cdate = str(obj.time.date.date)
                 cname= obj.username
                 cmail = obj.email
-                path = str(obj.time.date.name.name)
+                path = obj.time.date.name.name
                 obj.delete()
                 send_mail(u'Отмена регистрации на маршрут "Наука в путешествии. ПриМорье."',
                       rec_removed % (cname, cdate, ctime, path),
@@ -116,11 +107,11 @@ def register_user(request):
                                                     time=timeobj,
                                                     user=user)
                 hashurl = 'http://botsad.ru' + reverse('bgi-scheduler') + '?hashid=' + umod.hashid
-                send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье." (Ботанический сад, Владивосток)',
-                            rec_created%(uname, str(umod.time.date.name.name), str(umod.time.date.date), str(umod.time.time), hashurl),
+                send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье."',
+                            rec_created%(uname, umod.time.date.name.name, umod.time.date.date, umod.time.time, hashurl),
                             'ecocenter@botsad.ru', [umod.email, 'ecocenter@botsad.ru'], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
-            except:
+            except ValueError:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
         else:
             response_data.update({'error':err_msg})
