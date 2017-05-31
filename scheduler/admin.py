@@ -1,11 +1,12 @@
-#coding: utf-8
+# coding: utf-8
+
 from django.contrib import admin
 from django.utils.translation import gettext as _
 import datetime
 from django.contrib.admin import SimpleListFilter
 from django.contrib.auth import get_user_model
-
 from .models import ScheduleName, ScheduleDates, ScheduleModel, ScheduleTimes
+
 
 class PermissionMixin:
 
@@ -17,7 +18,8 @@ class PermissionMixin:
 
     def _common_permission_manager(self, request, obj):
         cperm = request.user.has_perm('scheduler.can_edit_all')
-        if cperm: return True
+        if cperm:
+            return True
         if obj:
             if request.user != obj.user:
                 return False
@@ -26,10 +28,10 @@ class PermissionMixin:
         return True
 
     def has_delete_permission(self, request, obj=None):
-       return self._common_permission_manager(request, obj)
+        return self._common_permission_manager(request, obj)
 
     def has_change_permission(self, request, obj=None):
-         return self._common_permission_manager(request, obj)
+        return self._common_permission_manager(request, obj)
 
     def save_model(self, request, obj, form, change):
         if not obj.user:
@@ -48,7 +50,6 @@ class SchedulerCustomListFilter(SimpleListFilter):
     parameter_name = 'user'
 
     def lookups(self, request, model_admin):
-        cperm = request.user.has_perm('scheduler.can_edit_all')
         res = []
         umodel = get_user_model()
         for item in list(set(map(lambda x: x.user.username, ScheduleName.objects.all().exclude(user__isnull=True)))):
@@ -72,6 +73,7 @@ class ScheduleTimesInline(PermissionMixin, admin.TabularInline):
     fieldsets = ((None, {'fields': ['time', 'get_registered', 'get_free_places']}),)
     extra = 0
 
+
 class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
     inlines = [ScheduleTimesInline]
 
@@ -86,28 +88,27 @@ class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
         if not request.user.has_perm('scheduler.can_edit_all'):
             readonly_fields.append('user')
         return readonly_fields
-    
+
     def get_form(self, request, obj=None, **kwargs):
         form = super(ScheduleDatesAdmin, self).get_form(request, obj, **kwargs)
         if not request.user.has_perm('scheduler.can_edit_all'):
             form.base_fields['name'].queryset = form.base_fields['name'].queryset.filter(user=request.user)
-        return form    
-    
-
+        return form
 
 
 class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
-    list_display = ('get_date', 'get_time','username', 'phone', 'num', 'email')
+    list_display = ('get_date', 'get_time', 'username', 'phone', 'num', 'email')
     list_filter = ('time__date__date',)
+
     def get_time(self, obj):
         return obj.time.time.strftime('%H:%M')
-    get_time.admin_order_field  = 'time'
-    get_time.short_description=_("Время")
+    get_time.admin_order_field = 'time'
+    get_time.short_description = _("Время")
 
     def get_date(self, obj):
         return obj.time.date.date.strftime('%a, %d %b %Y')
-    get_date.admin_order_field  = 'time__date__date'
-    get_date.short_description=_("Дата")
+    get_date.admin_order_field = 'time__date__date'
+    get_date.short_description = _("Дата")
 
     def get_list_filter(self, request):
         list_filter = super(ScheduleModelAdmin, self).get_list_filter(request)
@@ -121,6 +122,7 @@ class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
             readonly_fields.append('user')
         return readonly_fields
 
+
 class ScheduleNameAdmin(PermissionMixin, admin.ModelAdmin):
     actions = ['create_schedule']
 
@@ -130,7 +132,7 @@ class ScheduleNameAdmin(PermissionMixin, admin.ModelAdmin):
             for date in item.dates.all():
                 ctime = item.starttime
                 while ctime < item.endtime:
-                    ctime = (datetime.datetime.combine(datetime.date(1,1,1), ctime) + datetime.timedelta(minutes=item.mininterval)).time()
+                    ctime = (datetime.datetime.combine(datetime.date(1, 1, 1), ctime) + datetime.timedelta(minutes=item.mininterval)).time()
                     ScheduleTimes.objects.get_or_create(date=date, time=ctime, user=request.user)
                     thenum += 1
         self.message_user(request, u"Было создано %s записи" % thenum)
