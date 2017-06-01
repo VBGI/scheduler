@@ -10,7 +10,7 @@
    		{% for time in date.times.all %}
    			<li>{%if time.get_registered == 0%} 
    			<div class="scheduler-register"> Время: {{time.time|time:"H:i"}}</div>
-   			 <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}">
+   			 <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{date.user.pk}}">
     				{{ userform.as_table }}
     				 <input type="button" value="Зарегистрироваться" >
    			 </div>
@@ -22,7 +22,7 @@
    		{%with date.times.all|first as time %}
    		<li>{%if time.get_free_places > 0%} 
                         <div class="scheduler-register"> Зарегистрироваться</div>
-                         <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{time.user.pk}}">
+                         <div class="scheduler-user-form" data-time="{{time.pk}}" data-upk="{{date.user.pk}}">
                                 {{ userform.as_table }}
                                  <input type="button" value="Зарегистрироваться" >
                          </div>
