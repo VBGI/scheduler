@@ -73,7 +73,7 @@ $("div.scheduler-user-form input[type='button']").click(function( event ) {
 						 $(currentel).siblings('.scheduler-msg').show();
 						 $(currentel).children("input[type='button']").prop('disabled', true);
 						 $(currentel).siblings('input[type="text"]').val('');
-						 location.reload();
+						 window.setTimeout(location.reload, 4000);
 							}
 					else {
 						if (rdata['error'].length>0){
