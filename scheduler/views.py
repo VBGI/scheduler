@@ -108,8 +108,8 @@ def register_user(request):
                 hashurl = 'http://botsad.ru' + reverse('bgi-scheduler') + '?hashid=' + umod.hashid
                 basic_mail = umod.user.email if umod.user else 'ecocenter@botsad.ru'
                 send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье."',
-                            rec_created%(uname, umod.time.date.name.name, umod.time.date.date, (u', время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
-                            basic_mail, [umod.email, basic_mail], fail_silently=True)
+                            rec_created%(uname, umod.time.date.name.name, umod.time.date.date, (u' время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
+                            basic_mail, [umod.email, basic_mail] if basic_mail else [umod.email], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
             except IndexError:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
