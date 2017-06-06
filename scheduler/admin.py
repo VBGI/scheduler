@@ -67,7 +67,7 @@ class SchedulerCustomListFilter(SimpleListFilter):
             return queryset
 
 
-class ScheduleTimesInline(PermissionMixin, admin.TabularInline):
+class ScheduleTimesInline(admin.TabularInline):
     model = ScheduleTimes
     readonly_fields = ['get_registered', 'get_free_places']
     fieldsets = ((None, {'fields': ['time', 'get_registered', 'get_free_places']}),)
