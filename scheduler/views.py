@@ -94,8 +94,11 @@ def register_user(request):
             except ScheduleTimes.DoesNotExist:
                 response_data.update({'error': 'Неправильно выбрано время'})
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
-            if timeobj.get_free_places <= 0:
+            if timeobj.get_registered > 0 and not timeobj.date.dateonly:
                 response_data.update({'error': 'Выбранное время занято'})
+                return HttpResponse(json.dumps(response_data), content_type="application/json")
+            elif timeobj.get_free_places <=0 and timeobj.date.dateonly:
+                response_data.update({'error': 'Выбранная дата занята'})
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
                 unum = int(unum)
@@ -109,7 +112,7 @@ def register_user(request):
                 basic_mail = umod.user.email if umod.user else 'ecocenter@botsad.ru'
                 send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье."',
                             rec_created%(uname, umod.time.date.name.name, umod.time.date.date, (u' время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
-                            basic_mail, [umod.email, basic_mail] if basic_mail else [umod.email], fail_silently=True)
+                            'ecocenter@botsad.ru', [umod.email, basic_mail] if basic_mail else [umod.email], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
             except IndexError:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})

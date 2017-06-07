@@ -47,7 +47,7 @@ class ScheduleDates(models.Model):
 
 class ScheduleModel(models.Model):
     THENUM = ((1, 'Один'), (2, 'Два'), (3, 'Три'), (4, 'Четыре'), (5, 'Пять'))
-    username = models.CharField(max_length=100, default='', blank=True, verbose_name=_("ФИО"))
+    username = models.CharField(max_length=100, default='', blank=True, verbose_name=_("ФИО детей"))
     phone = models.CharField(max_length=20, default='', blank=True, verbose_name=_("Телефон"))
     email = models.EmailField(blank=True)
     num = models.IntegerField(default=1, choices=THENUM, verbose_name=_("Число участников"), blank=True)
