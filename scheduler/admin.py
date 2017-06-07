@@ -98,7 +98,7 @@ class ScheduleDatesAdmin(PermissionMixin, admin.ModelAdmin):
 
 class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
     list_display = ('get_date', 'get_time', 'username', 'phone', 'num', 'email')
-    list_filter = ('time__date__date',)
+    list_filter = ['time__date__date','time__date__name', SchedulerCustomListFilter]
 
     def get_time(self, obj):
         return obj.time.time.strftime('%H:%M')
@@ -112,8 +112,16 @@ class ScheduleModelAdmin(PermissionMixin, admin.ModelAdmin):
 
     def get_list_filter(self, request):
         list_filter = super(ScheduleModelAdmin, self).get_list_filter(request)
-        if request.user.has_perm('scheduler.can_edit_all'):
-            list_filter += (SchedulerCustomListFilter, 'time__date__name')
+        if not request.user.has_perm('scheduler.can_edit_all'):
+            if SchedulerCustomListFilter in list_filter:
+                list_filter.remove(SchedulerCustomListFilter)
+            if 'time__date__name' in list_filter:
+                list_filter.remove('time__date__name')
+        else:
+            if SchedulerCustomListFilter not in list_filter:
+                list_filter.append(SchedulerCustomListFilter)
+            if 'time__date__name' not in list_filter:
+                list_filter.append('time__date__name')
         return list_filter
 
     def get_readonly_fields(self, request, obj=None):
