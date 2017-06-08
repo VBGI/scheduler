@@ -102,7 +102,7 @@ def register_user(request):
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
                 unum = int(unum)
-                if ScheduleModel.objects.filter(username=uname, phone=uphone, emial=umail, num=unum, time=timeobj, user=user).exists():
+                if ScheduleModel.objects.filter(username=uname, phone=uphone, email=umail, num=unum, time=timeobj, user=user).exists():
                     response_data.update({'error': 'Вы уже зарегистрированы на это время/дату'})
                     return HttpResponse(json.dumps(response_data), content_type="application/json")
                 umod = ScheduleModel.objects.create(username=uname,
