@@ -16,7 +16,7 @@ rec_created = u'''
 
 Вы успешно зарегистрировались на маршрут "%s".
 
-Дата посещения маршрута: %s; %s 
+Дата посещения маршрута: %s; %s
 
 ВНИМАНИЕ!
 Отменить регистрацию Вы сможете, перейдя по ссылке:
@@ -24,7 +24,7 @@ rec_created = u'''
 %s
 
 
-Благодарим за участие, 
+Благодарим за участие,
 оргкомитет проекта "Наука в путешествии. ПриМорье."
 '''
 
@@ -34,7 +34,7 @@ rec_removed = u'''
 
 Вы успешно отменили регистрацию (дата: %s%s) на маршрут "%s".
 
-Благодарим за участие, 
+Благодарим за участие,
 оргкомитет проекта "Наука в путешествии. ПриМорье."
 '''
 
@@ -51,7 +51,7 @@ def validate(uname, phone):
 @csrf_exempt
 def register_user(request):
     response_data = {'error' : '', 'msg': '', 'ferr': ''}
-    
+
     if request.method == 'GET':
         hashid = request.GET.get('hashid', '')
         if hashid and ScheduleModel.objects.filter(hashid=hashid).exists():
@@ -69,7 +69,7 @@ def register_user(request):
             except:
                 HttpResponse('<h2>Запись с Вашим ID не найдена.</h2>')
             return HttpResponse('<h2>Поздравляем! Вы успешно отменили регистрацию!</h2>')
-    
+
     if request.method == 'POST':
         timepk = request.POST.get('timepk', None)
         uname = request.POST.get('username', '')
@@ -102,6 +102,9 @@ def register_user(request):
                 return HttpResponse(json.dumps(response_data), content_type="application/json")
             try:
                 unum = int(unum)
+                if ScheduleModel.objects.filter(username=uname, phone=uphone, emial=umail, num=unum, time=timeobj, user=user).exists():
+                    response_data.update({'error': 'Вы уже зарегистрированы на это время/дату'})
+                    return HttpResponse(json.dumps(response_data), content_type="application/json")
                 umod = ScheduleModel.objects.create(username=uname,
                                                     phone=uphone,
                                                     email=umail,
@@ -114,7 +117,7 @@ def register_user(request):
                             rec_created%(uname, umod.time.date.name.name, umod.time.date.date, (u' время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
                             'ecocenter@botsad.ru', [umod.email, basic_mail] if basic_mail else [umod.email], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
-            except IndexError:
+            except:
                 response_data.update({'error': 'Что-то пошло не так при регистрации'})
         else:
             response_data.update({'error':err_msg})
