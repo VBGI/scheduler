@@ -76,7 +76,10 @@ for item in data:
 
     um, _ = usermodel.objects.get_or_create(username=item['username'], active=True)
 
-    schm, _ = ScheduleName.objects.get_or_create(name=item['name'], user=um, maxnumber=maxnum)
+    if 'objpk' in item:
+        schm = ScheduleName.objects.get(pk=int(item['objpk']))
+    else:
+        schm, _ = ScheduleName.objects.get_or_create(name=item['name'], user=um, maxnumber=maxnum)
 
     for d in item['dates']:
         mo = int(d['month'])
