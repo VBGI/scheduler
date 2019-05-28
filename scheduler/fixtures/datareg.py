@@ -7,7 +7,8 @@ data = [
             {'month': '07', 'days': [2, 3, 6, 9, 10, 13, 16, 17 ]}
             ],
   'dateonly': True,
-  'email': 'zazerkalie2017@ocean.dvo.ru'
+  'email': 'zazerkalie2017@ocean.dvo.ru',
+  'slug': 'ocean'
 },
 
 { 'name' : 'Ботанический сад-институт ДВО РАН',
@@ -17,7 +18,9 @@ data = [
             {'month': '07', 'days': [1, 2, 7, 8, 9, 14, 15, 16]}
             ],
   'dateonly': True,
-  'email': 'ecocenter@botsad.ru'
+  'email': 'ecocenter@botsad.ru',
+  'slug': 'bsi'
+
 },
 
 { 'name' : 'Вилла "Курица"',
@@ -28,7 +31,8 @@ data = [
             ],
   'times': "11:00, 11:20, 11:40, 12:00, 12:20, 12:40, 13:00, 13:20, 13:40, 14:00, 14:20, 14:40, 15:00, 15:20, 15:40, 16:00, 16:20, 16:40, 17:00, 17:20, 17:40",
   'dateonly': False,
-  'email': 'svetlana.laletina@gmail.com'
+  'email': 'svetlana.laletina@gmail.com',
+  'slug': 'curica'
 },
 
 { 'name' : 'Вилла "Курица"',
@@ -39,7 +43,8 @@ data = [
             ],
   'times': "11:00, 11:20, 11:40, 12:00, 12:20, 12:40, 13:00, 13:20, 13:40, 14:00, 14:20, 14:40",
   'dateonly': False,
-  'email': 'svetlana.laletina@gmail.com'
+  'email': 'svetlana.laletina@gmail.com',
+  'slug': 'curica'
 },
 
 { 'name' : 'Дом Суханова',
@@ -49,7 +54,8 @@ data = [
             ],
   'times': "14:00; 14:15; 14:30; 14:45; 15:00; 15:15; 15:30; 15:45; 16:00; 16:15; 16:30; 16:45; 17:00",
   'dateonly': False,
-  'email': 'lidiya_novinskay@mail.ru'
+  'email': 'lidiya_novinskay@mail.ru',
+  'slug': 'sukhanov'
 },
 
 { 'name' : 'Дом Суханова',
@@ -59,7 +65,9 @@ data = [
             ],
   'times': "10:15; 10:30; 10:45; 11:00; 11:15; 11:30; 11:45; 12:00; 12:15; 12:30; 12:45; 13:00; 13:15; 13:30; 13:45; 14:00; 14:15; 14:30; 14:45; 15:00; 15:15; 15:30; 15:45; 16:00; 16:15; 16:30; 16:45; 17:00",
   'dateonly': False,
-  'email': 'lidiya_novinskay@mail.ru'
+  'email': 'lidiya_novinskay@mail.ru',
+  'slug': 'sukhanov'
+
 },
 
 { 'name' : 'Зоомузей ДВФУ',
@@ -69,7 +77,8 @@ data = [
             ],
   'times': "11:00; 11:20; 11:40; 12:00; 12:20; 12:40; 13:00; 13:20; 13:40; 14:00; 14:20; 14:40; 15:00; 15:20; 15:40, 16:00",
   'dateonly': False,
-  'email': 'rakushki61@mail.ru'
+  'email': 'rakushki61@mail.ru',
+ 'slug': 'zoo'
 },
 
 
@@ -81,7 +90,8 @@ data = [
             ],
   'times': "11:00; 11:15; 11:30; 11:45; 12:00; 12:15; 12:30; 12:45; 13:00; 13:15; 13:30; 13:45; 14:00; 14:15; 14:30; 14:45; 15:00; 15:15; 15:30; 15:45; 16:00",
   'dateonly': False,
-  'email': 'seaproject@mail.ru'
+  'email': 'seaproject@mail.ru',
+ 'slug': 'nncmb-dvo-ran'
 },
 
 { 'name' : 'Главный корпус муз. Арсеньева',
@@ -91,7 +101,8 @@ data = [
             ],
   'times': "11:00; 11:15; 11:30; 11:45; 12:00; 12:15; 12:30; 12:45; 13:00; 13:15; 13:30; 13:45; 14:00; 14:15; 14:30; 14:45; 15:00; 15:15; 15:30; 15:45; 16:00",
   'dateonly': False,
-  'email': 'museum.education@arseniev.org'
+  'email': 'museum.education@arseniev.org',
+ 'slug': 'arsenev'
 },
 
 { 'name' : 'Картинная галерея',
@@ -101,7 +112,8 @@ data = [
             ],
   'times': "11:00; 11:15; 11:30; 11:45; 12:00; 12:15; 12:30; 12:45; 13:00; 13:15; 13:30; 13:45; 14:00; 14:15; 14:30; 14:45; 15:00; 15:15; 15:30; 15:45; 16:00; 16:15; 16:30; 16:45; 17:00",
   'dateonly': False,
-  'email': 'primgallery@mail.ru'
+  'email': 'primgallery@mail.ru',
+ 'slug':'cartina'
 },
 
 
@@ -112,7 +124,8 @@ data = [
             ],
   'times': "11:00; 11:15; 11:30; 11:45; 12:00; 12:15; 12:30; 12:45; 13:00; 13:15; 13:30; 13:45; 14:00; 14:15; 15:00; 15:15; 15:30; 15:45; 16:00",
   'dateonly': False,
-  'email': 'geolog-mineral@mail.ru'
+  'email': 'geolog-mineral@mail.ru',
+ 'slug': 'geo'
 },
 
 { 'name' : 'Музей города',
@@ -122,7 +135,8 @@ data = [
             ],
   'times': "10:30    10:50    11:10    11:30    11:50    12:10    12:30    12:50    13:10    13:30    13:50    14:10    14:30    14:50    15:10    15:30    15:50    16:10    16:30    16:50    17:10    17:30",
   'dateonly': False,
-  'email': 'museumcityvlad@gmail.com'
+  'email': 'museumcityvlad@gmail.com',
+ 'slug': 'gorod'
 },
 
 { 'name' : 'ЦСИ "Заря"',
@@ -132,7 +146,8 @@ data = [
             ],
   'times': "12:00, 12:30, 13:00, 13:30, 14:00, 14:30, 15:00, 15:30, 16:00, 16:30, 17:00, 17:30, 18:00",
   'dateonly': False,
-  'email': 'info@zaryavladivostok.ru'
+  'email': 'info@zaryavladivostok.ru',
+ 'slug': 'zarya'
 },
 
 
@@ -143,6 +158,7 @@ data = [
             ],
   'times': "10:30    10:50    11:10    11:30    11:50    12:10    12:30    12:50    13:10    13:30    13:50    14:10    14:30    14:50    15:10    15:30    15:50    16:10    16:30    16:50    17:10    17:30",
   'dateonly': False,
-  'email': 'arsenieviVM@yandex.ru'
+  'email': 'arsenieviVM@yandex.ru',
+ 'slug' : 'dom'
 },
 ]

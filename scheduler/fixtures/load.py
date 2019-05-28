@@ -1,3 +1,4 @@
+#coding: utf-8
 from __future__ import print_function
 
 import sys, os, re
@@ -9,6 +10,14 @@ os.environ['DJANGO_SETTINGS_MODULE']='bgi.settings'
 from bgi.scheduler.fixtures.datareg import data
 from bgi.scheduler.models import ScheduleName, ScheduleDates, ScheduleTimes
 from django.contrib.auth import get_user_model
+import random
+from string import letters
+import time as time_module
+
+import smtplib
+
+from email.mime.text import MIMEText
+from email.utils import formatdate
 
 
 CDIR = os.path.dirname(os.path.abspath(__file__))
@@ -17,7 +26,7 @@ CDIR = os.path.dirname(os.path.abspath(__file__))
 usermodel = get_user_model()
 
 
-send_template = """
+letter_template = """
 Здравствуйте, {}!
 
 Для вас была создана регистрационная форма
@@ -48,7 +57,11 @@ send_template = """
 
 """
 
-theme_template = "Регистрационная форма (Сам по следам)"
+theme_template = "Регистрационная форма (Сам по следам). Данные для входа в панель администрирования."
+
+# -------- email authentification data
+MAIL_PASS = ''
+MAIL_LOGIN = 'no-reply@botsad.ru'  # These data will be erased
 
 
 # -------- utility function
@@ -71,8 +84,8 @@ for item in data:
     else:
         maxnum = 5
 
-    um, _ = usermodel.objects.get_or_create(username=item['username'], is_stuff=True,
-                                            email=item['email'])
+    um, _ = usermodel.objects.get_or_create(username=item['username'], is_stuff=True)
+
     if 'objpk' in item:
         schm = ScheduleName.objects.get(pk=int(item['objpk']))
     else:
@@ -88,4 +101,26 @@ for item in data:
                 for t in parse_times(item['times']):
                     ScheduleTimes.objects.get_or_create(date=schd, user=um, time=t)
 
-# -------------------------------------------------------
+    # -------------------------------------------------------
+    # sending email
+    passw = ''.join([random.choice(letters) for k in range(5)])
+    um.set_password(passw)
+    um.email = item['email']
+    um.save()
+    letter = letter_template.format(item['name'], item['username'],
+                                    passw, item['slug'], item['name'],
+                                    item['slug'], item['name'])
+
+    smtp = smtplib.SMTP_SSL('smtp.yandex.ru', 465)
+    smtp.login(MAIL_LOGIN, MAIL_PASS)
+    msg = MIMEText(letter, "plain", "utf-8")
+    msg['Date'] = formatdate(localtime=True)
+    msg["Subject"] = theme_template.format(item['name'])
+    msg["To"] = 'kislov@botsad.ru'  # TODO : item['email'] instead
+    msg["From"] = MAIL_LOGIN
+    print('=' * 30)
+    print("Sending the message")
+    print(msg.as_string())
+   # smtp.sendmail('biomorphology@botsad.ru', [tomail], msg.as_string())
+    smtp.quit()
+    time_module.sleep(random.randint(10, 30))
