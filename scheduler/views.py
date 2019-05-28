@@ -25,7 +25,7 @@ rec_created = u'''
 
 
 Благодарим за участие,
-оргкомитет проекта "Наука в путешествии. ПриМорье."
+оргкомитет проекта "Сам по следам".
 '''
 
 
@@ -35,7 +35,7 @@ rec_removed = u'''
 Вы успешно отменили регистрацию (дата: %s%s) на маршрут "%s".
 
 Благодарим за участие,
-оргкомитет проекта "Наука в путешествии. ПриМорье."
+оргкомитет проекта "Сам по следам".
 '''
 
 
@@ -63,7 +63,7 @@ def register_user(request):
                 cmail = obj.email
                 path = obj.time.date.name.name
                 obj.delete()
-                send_mail(u'Отмена регистрации на маршрут "Наука в путешествии. ПриМорье."',
+                send_mail(u'Отмена регистрации на маршрут "Сам по следам"',
                       rec_removed % (cname, cdate, ctime, path),
                       'ecocenter@botsad.ru', [cmail,], fail_silently=True)
             except:
@@ -113,8 +113,8 @@ def register_user(request):
                                                     user=user)
                 hashurl = 'http://botsad.ru' + reverse('bgi-scheduler') + '?hashid=' + umod.hashid
                 basic_mail = umod.user.email if umod.user else 'ecocenter@botsad.ru'
-                send_mail(u'Регистрация на маршрут "Наука в путешествии. ПриМорье."',
-                            rec_created%(uname, umod.time.date.name.name, umod.time.date.date, (u' время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
+                send_mail(u'Регистрация на маршрут "Сам по следам"',
+                            rec_created % (uname, umod.time.date.name.name, umod.time.date.date, (u' время: ' + str(umod.time.time)) if not umod.time.date.dateonly else '', hashurl),
                             'ecocenter@botsad.ru', [umod.email, basic_mail] if basic_mail else [umod.email], fail_silently=True)
                 response_data.update({'msg': 'Вы успешно зарегистрировались'})
             except:

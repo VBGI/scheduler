@@ -13,7 +13,6 @@ from ..models import ScheduleName, ScheduleDates, ScheduleTimes
 from django.contrib.auth import get_user_model
 
 
-
 CDIR = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -23,8 +22,8 @@ usermodel = get_user_model()
 send_template = """
 Здравствуйте, {}!
 
-Для вас была создана регистрационная форма 
-в рамках проекта "Наука в Путешествии".
+Для вас была создана регистрационная форма
+в рамках проекта "Сам по следам".
 
 Данные для авторизации:
 =======================
@@ -47,12 +46,11 @@ send_template = """
 <!-- Конец кода {} -->
 
 
-
 Это письмо сегенрировано автоматически. Отвечать на него не нужно.
 
 """.format()
 
-theme_template = "Регистрационная форма (Наука в Путешествии)"
+theme_template = "Регистрационная форма (Сам по следам)"
 
 
 # -------- utility function
@@ -65,9 +63,6 @@ def parse_times(s):
     times = [(int(item.split(':')[0]), int(item.split(':')[1])) for item in pats]
     result = [time(hour=t[0], minute=t[1]) for t in times]
     return result
-    
-    
-
 
 
 # --------------- Loading & processing the data ---------
@@ -78,11 +73,11 @@ for item in data:
         maxnum = 2000
     else:
         maxnum = 5
-    
+
     um, _ = usermodel.objects.get_or_create(username=item['username'], active=True)
-    
+
     schm, _ = ScheduleName.objects.get_or_create(name=item['name'], user=um, maxnumber=maxnum)
-    
+
     for d in item['dates']:
         mo = int(d['month'])
         for day in d['days']:
@@ -92,13 +87,5 @@ for item in data:
         else:
             for t in parse_times(item['times']):
                 ScheduleTimes.objects.get_or_create(date=schd, user=um, time=t)
-    
-    # --------------------
-    
-    
-    
-    # -------- sending email
-
-    
 
 # -------------------------------------------------------
