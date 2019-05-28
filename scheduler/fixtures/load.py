@@ -84,7 +84,7 @@ for item in data:
     else:
         maxnum = 5
 
-    um, _ = usermodel.objects.get_or_create(username=item['username'], is_stuff=True)
+    um, _ = usermodel.objects.get_or_create(username=item['username'], is_staff=True)
 
     if 'objpk' in item:
         schm = ScheduleName.objects.get(pk=int(item['objpk']))
