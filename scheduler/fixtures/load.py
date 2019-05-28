@@ -1,15 +1,13 @@
 from __future__ import print_function
 
-import sys, os
-
+import sys, os, re
 from datetime import date, time
 
 sys.path.append('/home/scidam/webapps/bgicms242/bgi')
 os.environ['DJANGO_SETTINGS_MODULE']='bgi.settings'
 
-from .datareg import data
-from ..models import ScheduleName, ScheduleDates, ScheduleTimes
-
+from bgi.scheduler.fixtures.datareg import data
+from bgi.scheduler.models import ScheduleName, ScheduleDates, ScheduleTimes
 from django.contrib.auth import get_user_model
 
 
@@ -48,18 +46,17 @@ send_template = """
 
 Это письмо сегенрировано автоматически. Отвечать на него не нужно.
 
-""".format()
+"""
 
 theme_template = "Регистрационная форма (Сам по следам)"
 
 
 # -------- utility function
-import re
 timepat = re.compile('\d\d:\d\d')
 
 
 def parse_times(s):
-    pats = timepat.findall('s')
+    pats = timepat.findall(s)
     times = [(int(item.split(':')[0]), int(item.split(':')[1])) for item in pats]
     result = [time(hour=t[0], minute=t[1]) for t in times]
     return result
@@ -74,8 +71,8 @@ for item in data:
     else:
         maxnum = 5
 
-    um, _ = usermodel.objects.get_or_create(username=item['username'], active=True)
-
+    um, _ = usermodel.objects.get_or_create(username=item['username'], is_stuff=True,
+                                            email=item['email'])
     if 'objpk' in item:
         schm = ScheduleName.objects.get(pk=int(item['objpk']))
     else:
@@ -84,11 +81,11 @@ for item in data:
     for d in item['dates']:
         mo = int(d['month'])
         for day in d['days']:
-            schd,_ = ScheduleDates.objects.get_or_create(name=schm, user=um, date=date(year=2019, month=mo, day=day), dateonly=item['dateonly'])
-        if item['dateonly']:
-            ScheduleTimes.objects.get_or_create(date=schd, user=um, time=time(hour=11, minute=0, second=0))
-        else:
-            for t in parse_times(item['times']):
-                ScheduleTimes.objects.get_or_create(date=schd, user=um, time=t)
+            schd,_ = ScheduleDates.objects.get_or_create(name=schm, user=um, date=date(year=2019, month=mo, day=int(day)), dateonly=item['dateonly'])
+            if item['dateonly']:
+                ScheduleTimes.objects.get_or_create(date=schd, user=um, time=time(hour=11, minute=0, second=0))
+            else:
+                for t in parse_times(item['times']):
+                    ScheduleTimes.objects.get_or_create(date=schd, user=um, time=t)
 
 # -------------------------------------------------------
